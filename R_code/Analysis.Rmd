@@ -1,7 +1,16 @@
+---
+title: "project1"
+author: "Shoto Fukuda"
+date: "4/10/2023"
+output: html_document
+---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 ## Library lists
-
+```{r}
 library("plyr")
 library("dplyr")
 library("Hmisc")
@@ -13,60 +22,74 @@ library("factoextra") # clustering algorithms & visualization
 library("collapse")
 library("scales")
 library("psych") 
-
+```
 
 ## Read a csv file
+```{r}
+# Insert the file fath
+tripadvisor_review <- read.csv("C:/Users/Syoto/OneDrive - University of North Florida/Desktop/CAPSTONE/DATASET/tripadvisor_review.csv")
 
-
-tripadvisor_review <- read.csv("!!!Insert the file fath!!!")
 # View(tripadvisor_review)
-
+```
 
 ## Change the column names
+```{r}
 #new name lists
 new_names <- c('UserId', 'Art_Galleries', 'Dance_Clubs', 'Juice_Bars',
                'Restaurants', 'Museums', 'Resorts', 'Parks_Picnics',
-               'Beaches', 'Theaters', 'Religious')
+               'Beaches', 'Theaters', 'Religious_Places')
 
 colnames(tripadvisor_review) <- new_names
-# View(tripadvisor_review)
 
+View(tripadvisor_review)
+```
 
 ## Summaty of each column
+```{r}
 # Five number summary
 summary(tripadvisor_review)
+```
 
-
-## Drop ID column
+## Drop ID column & get the variance
+```{r}
 dfSub <- tripadvisor_review[,-1]
+var <- apply(dfSub, 2, var)
 
+round(var, digits=5)
+
+```
 
 
 ## Correlation matrix
+```{r}
 corre <- rcorr(as.matrix(dfSub))
 corre
-
+```
 ## Correlation matrix Visualization
+```{r}
 chart.Correlation(dfSub, histogram=TRUE, pch=19)
 
 correlation = cor(dfSub)
 corrplot(correlation, type = "upper", order = "hclust", 
          tl.col = "black", tl.srt = 45)
 
-
+```
 
 #Drop ID column and apply SCALE function
+```{r}
 df <- scale(tripadvisor_review[,-1])
 View(df)
-
+```
 
 
 #Summary of df table and variance
+```{r}
 summary(df)
 apply(df, 2, var)
-
+```
 
 ## K-mean & generate the K = 2,3,4, and 5
+```{r}
 # Compute k-means with k = 4
 set.seed(123)
 k2 <- kmeans(df, centers = 2, nstart = 25)
@@ -75,11 +98,12 @@ k4 <- kmeans(df, centers = 4, nstart = 25)
 k5 <- kmeans(df, centers = 5, nstart = 25)
 
 
-
+```
 
 
 
 ## Clsuter plot prepare adn plot
+```{r}
 #prepare
 p1 <- fviz_cluster(k2, geom = "point", data = df) + ggtitle("k = 2")
 p2 <- fviz_cluster(k3, geom = "point",  data = df) + ggtitle("k = 3")
@@ -89,11 +113,12 @@ p4 <- fviz_cluster(k5, geom = "point",  data = df) + ggtitle("k = 5")
 ## Cluster plot
 library(gridExtra)
 grid.arrange(p1, p2, p3, p4, nrow = 2)
-
+```
 
 
 
 #Apply methods to determine the number of cluster for our dataset
+```{r}
 # Elbow method
 fviz_nbclust(df, kmeans, method = "wss", print.summary = TRUE) +
   geom_vline(xintercept = 4, linetype = 2)+
@@ -107,11 +132,10 @@ fviz_nbclust(df, kmeans, method = "silhouette")+
 set.seed(123)
 fviz_nbclust(df, kmeans, nstart = 25, method = "gap_stat", nboot = 500)+
   labs(subtitle = "Gap statistic method")
-
-
+```
 
 ## Summary of models (k = 2,3,4 and 5)
-
+```{r}
 #Summary K = 2
 k2_rank <- aggregate(df, by=list(cluster=k2$cluster), mean)
 View(k2_rank)
@@ -127,11 +151,12 @@ View(K4_rank)
 #Summary K = 5
 k5_rank <- aggregate(df, by=list(cluster=k5$cluster), mean)
 view(k5_rank)
-
+```
 
 
 
 ## Final model
+```{r}
 # Compute k-means clustering with k = 4
 set.seed(123)
 final <- kmeans(df, 4, nstart = 25)
@@ -139,9 +164,9 @@ print(final)
 
 # Final model graph
 fviz_cluster(final, data = df)
+```
 
 
 
-
-
+```
 
