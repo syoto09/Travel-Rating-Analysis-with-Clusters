@@ -1,6 +1,6 @@
 ---
-title: "project1"
-author: "Shoto Fukuda"
+title: "Final Project Code"
+author: "SF"
 date: "4/10/2023"
 output: html_document
 ---
@@ -26,8 +26,8 @@ library("psych")
 
 ## Read a csv file
 ```{r}
-# Insert the file fath
-tripadvisor_review <- read.csv("C:/Users/Syoto/OneDrive - University of North Florida/Desktop/CAPSTONE/DATASET/tripadvisor_review.csv")
+# Insert your file fath
+tripadvisor_review <- read.csv("@@@@@@file_path@@@@@")
 
 # View(tripadvisor_review)
 ```
